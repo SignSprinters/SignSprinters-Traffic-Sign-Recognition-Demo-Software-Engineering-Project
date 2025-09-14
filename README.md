@@ -89,6 +89,9 @@ Security was integrated via **Secure Software Development Life Cycle (SecSDLC)**
 ---
 ![Proof HTML](https://github.com/SignSprinters/SignSprinters-Traffic-Sign-Recognition-Demo-Software-Engineering-Project/actions/workflows/proof-html.yml/badge.svg)
 ![Repo Activity](https://github.com/SignSprinters/SignSprinters-Traffic-Sign-Recognition-Demo-Software-Engineering-Project/actions/workflows/activity-all-files.yml/badge.svg)
+![Commits](https://img.shields.io/github/commit-activity/m/username/repo)
+![Files](https://img.shields.io/github/directory-file-count/username/repo)
+![Languages](https://img.shields.io/github/languages/count/username/repo)
 
 ## Getting Started
 
