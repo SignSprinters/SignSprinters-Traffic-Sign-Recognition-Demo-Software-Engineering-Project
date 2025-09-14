@@ -1,37 +1,39 @@
-name: Generate Achievement Badges
+name: 🚦 SignSprinters Achievement Badges
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main, master, develop ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ main, master, develop ]
 
 jobs:
-  generate-badges:
+  generate-achievements:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
+    - name: 🚀 Checkout Repository
+      uses: actions/checkout@v4
       with:
-        node-version: '18'
+        fetch-depth: 0  # Get full history for commit counting
     
-    - name: Install dependencies
-      run: |
-        npm init -y
-        npm install fs path
+    - name: 📊 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
     
-    - name: Generate Achievement Badges
-      run: node generate-badges.js
+    - name: 🏆 Generate SignSprinters Badges
+      run: node .github/scripts/generate-signsprinters-badges.js
       
-    - name: Commit badge updates
+    - name: 📝 Commit Achievement Updates
       run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add achievements.json README.md
-        git diff --staged --quiet || git commit -m "🏆 Update achievement badges"
-        git push
+        git config --local user.email "signsprinters-bot@github.com"
+        git config --local user.name "SignSprinters Achievement Bot"
+        git add -A
+        if ! git diff --staged --quiet; then
+          git commit -m "🏆 Update SignSprinters achievement badges [automated]"
+          git push
+        else
+          echo "No changes to commit"
+        fi
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
