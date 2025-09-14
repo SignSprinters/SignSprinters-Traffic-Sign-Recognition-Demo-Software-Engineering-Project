@@ -87,6 +87,7 @@ Security was integrated via **Secure Software Development Life Cycle (SecSDLC)**
 ![Admin Dashboard](https://via.placeholder.com/600x350.png?text=Admin+Dashboard)  
 
 ---
+
 ![Proof HTML](https://github.com/SignSprinters/SignSprinters-Traffic-Sign-Recognition-Demo-Software-Engineering-Project/actions/workflows/proof-html.yml/badge.svg)
 ![Repo Activity](https://github.com/SignSprinters/SignSprinters-Traffic-Sign-Recognition-Demo-Software-Engineering-Project/actions/workflows/activity-all-files.yml/badge.svg)
 ![Commits](https://img.shields.io/github/commit-activity/m/SignSprinters/SignSprinters-Traffic-Sign-Recognition-Demo-Software-Engineering-Project)
@@ -106,20 +107,9 @@ Security was integrated via **Secure Software Development Life Cycle (SecSDLC)**
 git clone https://github.com/SignSprinters/SignSprinters-Traffic-Sign-Recognition-Demo-Software-Engineering-Project.git
 cd Traffic-Sign-Recognition-Demo
 pip install -r requirements.txt
+```
 
-## 📊 Stats
-
-- 🐍 Python Files: 0
-- 🤖 ML Files: 0
-- 📊 Data Files: 0
-- 📚 Doc Files: 2
-- 🧪 Test Files: 2
-- 📝 Commits: 34
-
-**Progress: 3/7 badges**
-
-*Updated: 9/14/2025*
-
+---
 
 ## 🏆 SignSprinters Achievements
 
@@ -131,7 +121,9 @@ pip install -r requirements.txt
 
 </div>
 
-### 📊 Stats
+---
+
+## 📊 Stats
 
 - 🐍 Python Files: 0
 - 🤖 ML Files: 0
@@ -143,4 +135,3 @@ pip install -r requirements.txt
 **Progress: 3/7 badges**
 
 *Updated: 9/14/2025*
-
