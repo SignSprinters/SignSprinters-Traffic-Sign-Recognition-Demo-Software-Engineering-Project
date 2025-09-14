@@ -73,11 +73,11 @@ Security was integrated via **Secure Software Development Life Cycle (SecSDLC)**
 ---
 
 ## Technology Stack
-- **Frontend**: Web-based dashboard and gameplay interface  
-- **Backend**: Python (Flask / FastAPI)  
-- **Machine Learning**: TensorFlow / PyTorch (stubbed model)  
-- **Database**: MySQL (logs and reports)  
-- **Version Control & Workflow**: GitHub, Agile-driven development  
+- **Frontend**: Web-based dashboard and gameplay interface . 
+- **Backend**: Python (Flask / FastAPI)  .
+- **Machine Learning**: TensorFlow / PyTorch (stubbed model)  .
+- **Database**: MySQL (logs and reports)  .
+- **Version Control & Workflow**: GitHub, Agile-driven development  .
 
 ---
 
