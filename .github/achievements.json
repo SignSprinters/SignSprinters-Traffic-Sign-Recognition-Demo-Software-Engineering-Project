@@ -1,8 +1,10 @@
 {
   "earned": [
     "traffic-pioneer",
-    "test-engineer",
-    "commit-champion"
+    "test-engineer", 
+    "commit-champion",
+    "doc-master",
+    "repository-creator"
   ],
   "stats": {
     "commits": 46,
