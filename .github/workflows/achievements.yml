@@ -174,7 +174,7 @@ function main() {
 }
 
 main();
-SCRIPT_EOF
+EOF
 
     - name: 🏆 Generate Badges
       run: |
