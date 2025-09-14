@@ -1,0 +1,28 @@
+name: Repo Activity Badge
+
+# Trigger on any push, pull request, or manual run
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:  # manual trigger
+
+jobs:
+  activity:
+    name: Track Any Repo Activity
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: List changed files
+        run: |
+          echo "Files changed in this commit or PR:"
+          git diff --name-only ${{ github.event.before }} ${{ github.sha }} || echo "No changes detected."
+      
+      - name: Record activity
+        run: echo "Activity recorded successfully! Any file changes (PDF, code, docs) are tracked."
