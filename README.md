@@ -123,7 +123,7 @@ pip install -r requirements.txt
 
 ## 🏆 SignSprinters Achievements
 
-<div>
+<div align="center">
 
 ![Traffic Pioneer](https://img.shields.io/badge/Traffic%20Pioneer-First%20commit-FF6B35?style=for-the-badge)
 ![Test Engineer](https://img.shields.io/badge/Test%20Engineer-Test%20files-FF9800?style=for-the-badge)
@@ -138,7 +138,7 @@ pip install -r requirements.txt
 - 📊 Data Files: 0
 - 📚 Doc Files: 2
 - 🧪 Test Files: 2
-- 📝 Commits: 40
+- 📝 Commits: 42
 
 **Progress: 3/7 badges**
 
