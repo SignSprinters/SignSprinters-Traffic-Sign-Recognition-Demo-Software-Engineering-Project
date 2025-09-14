@@ -127,9 +127,9 @@ pip install -r requirements.txt
 - 🐍 Python Files: 0
 - 🤖 ML Files: 0
 - 📊 Data Files: 0
-- 📚 Doc Files: 3
+- 📚 Doc Files: 4
 - 🧪 Test Files: 2
-- 📝 Commits: 62
+- 📝 Commits: 64
 
 **Progress: 4/7 badges**
 
