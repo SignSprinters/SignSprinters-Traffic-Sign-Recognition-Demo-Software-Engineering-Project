@@ -1,7 +1,9 @@
+name: Proof HTML
+
 on:
   push:
     branches:
-      - main  
+      - main   # replace if your default branch is different
   pull_request:
     branches:
-      - main  
+      - main
