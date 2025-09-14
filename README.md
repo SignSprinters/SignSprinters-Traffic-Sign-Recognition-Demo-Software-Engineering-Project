@@ -111,19 +111,6 @@ pip install -r requirements.txt
 
 ---
 
-## 📊 Stats
-
-- 🐍 Python Files: 0
-- 🤖 ML Files: 0
-- 📊 Data Files: 0
-- 📚 Doc Files: 2
-- 🧪 Test Files: 2
-- 📝 Commits: 42
-
-**Progress: 5/7 badges**
-
-*Updated: 9/14/2025*
-
 ## 🏆 SignSprinters Achievements
 
 <div align="center">
