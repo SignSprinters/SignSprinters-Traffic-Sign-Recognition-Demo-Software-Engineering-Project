@@ -111,27 +111,6 @@ pip install -r requirements.txt
 
 ---
 
-## 🏆 SignSprinters Achievements
-
-<div align="center">
-
-![Traffic Pioneer](https://img.shields.io/badge/Traffic%20Pioneer-First%20commit-FF6B35?style=for-the-badge)
-![Test Engineer](https://img.shields.io/badge/Test%20Engineer-Test%20files-FF9800?style=for-the-badge)
-![Commit Champion](https://img.shields.io/badge/Commit%20Champion-25%2B%20commits-FFD700?style=for-the-badge)
-![Doc Master](https://img.shields.io/badge/Doc%20Master-Documentation%20files-4CAF50?style=for-the-badge)
-![Repository Creator](https://img.shields.io/badge/Repository%20Creator-Project%20setup-9C27B0?style=for-the-badge)
-
-</div>
-
-<div align="center">
-
-![Code Warrior](https://img.shields.io/badge/Code%20Warrior-Coming%20Soon-CCCCCC?style=for-the-badge)
-![ML Expert](https://img.shields.io/badge/ML%20Expert-Coming%20Soon-CCCCCC?style=for-the-badge)
-
-</div>
-
----
-
 ## 📊 Stats
 
 - 🐍 Python Files: 0
@@ -144,3 +123,27 @@ pip install -r requirements.txt
 **Progress: 5/7 badges**
 
 *Updated: 9/14/2025*
+
+## 🏆 SignSprinters Achievements
+
+<div align="center">
+
+![Traffic Pioneer](https://img.shields.io/badge/Traffic%20Pioneer-First%20commit-FF6B35?style=for-the-badge)
+![Test Engineer](https://img.shields.io/badge/Test%20Engineer-Test%20files-FF9800?style=for-the-badge)
+![Commit Champion](https://img.shields.io/badge/Commit%20Champion-25%2B%20commits-FFD700?style=for-the-badge)
+
+</div>
+
+### 📊 Stats
+
+- 🐍 Python Files: 0
+- 🤖 ML Files: 0
+- 📊 Data Files: 0
+- 📚 Doc Files: 2
+- 🧪 Test Files: 2
+- 📝 Commits: 46
+
+**Progress: 3/7 badges**
+
+*Updated: 9/14/2025*
+
