@@ -27,7 +27,7 @@
 ## Introduction
 **SignSprinters** is a student-led initiative demonstrating how **software engineering principles** can solve real-world challenges.  
 
-Our flagship project, the **Traffic Sign Recognition Demo (TSRS)**, merges **AI, gamification, and Agile practices** to create an interactive system that educates users on traffic signs while showcasing the value of structured software engineering.
+The **Traffic Sign Recognition Demo (TSRS)**, merges **AI, gamification, and Agile practices** to create an interactive system that educates users on traffic signs while showcasing the value of structured software engineering.
 
 ---
 
