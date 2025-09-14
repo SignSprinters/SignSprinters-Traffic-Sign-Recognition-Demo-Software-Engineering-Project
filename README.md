@@ -123,7 +123,7 @@ pip install -r requirements.txt
 
 ## 🏆 SignSprinters Achievements
 
-<div align="center">
+<div>
 
 ![Traffic Pioneer](https://img.shields.io/badge/Traffic%20Pioneer-First%20commit-FF6B35?style=for-the-badge)
 ![Test Engineer](https://img.shields.io/badge/Test%20Engineer-Test%20files-FF9800?style=for-the-badge)
