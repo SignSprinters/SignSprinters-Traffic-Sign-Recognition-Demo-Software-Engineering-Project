@@ -107,30 +107,6 @@ git clone https://github.com/SignSprinters/Traffic-Sign-Recognition-Demo.git
 cd Traffic-Sign-Recognition-Demo
 pip install -r requirements.txt
 
-## 🏆 SignSprinters Achievements
-
-<div align="center">
-
-![Traffic Pioneer](https://img.shields.io/badge/Traffic%20Pioneer-First%20commit-FF6B35?style=for-the-badge)
-![Commit Champion](https://img.shields.io/badge/Commit%20Champion-25%2B%20commits-FFD700?style=for-the-badge)
-
-</div>
-
-### 📊 Stats
-
-- 🐍 Python Files: **0**
-- 🤖 ML Files: **0**
-- 📊 Data Files: **0**
-- 📚 Doc Files: **2**
-- 🧪 Test Files: **0**
-- 🌐 Web Files: **1**
-- ⚙️ Config Files: **0**
-- 📝 Commits: **36**
-
-**Progress: 2/9 badges (22%)**
-
-*Updated: 9/14/2025, 9:34:02 AM*
-
 ## 📊 Stats
 
 - 🐍 Python Files: 0
@@ -139,6 +115,30 @@ pip install -r requirements.txt
 - 📚 Doc Files: 2
 - 🧪 Test Files: 2
 - 📝 Commits: 34
+
+**Progress: 3/7 badges**
+
+*Updated: 9/14/2025*
+
+
+## 🏆 SignSprinters Achievements
+
+<div align="center">
+
+![Traffic Pioneer](https://img.shields.io/badge/Traffic%20Pioneer-First%20commit-FF6B35?style=for-the-badge)
+![Test Engineer](https://img.shields.io/badge/Test%20Engineer-Test%20files-FF9800?style=for-the-badge)
+![Commit Champion](https://img.shields.io/badge/Commit%20Champion-25%2B%20commits-FFD700?style=for-the-badge)
+
+</div>
+
+### 📊 Stats
+
+- 🐍 Python Files: 0
+- 🤖 ML Files: 0
+- 📊 Data Files: 0
+- 📚 Doc Files: 2
+- 🧪 Test Files: 2
+- 📝 Commits: 38
 
 **Progress: 3/7 badges**
 
