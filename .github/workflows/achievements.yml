@@ -6,334 +6,306 @@ on:
   pull_request:
     branches: [ main, master, develop ]
 
+permissions:
+  contents: write  # allows push to repo
+
 jobs:
-  generate-achievements:
+  update-achievements:
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: 🚀 Checkout Repository
       uses: actions/checkout@v4
       with:
-        fetch-depth: 0  # Get full history for commit counting
-    
+        fetch-depth: 0
+        persist-credentials: true  # critical to allow push
+
     - name: 📊 Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '20'
-    
-    - name: 📁 Create Scripts Directory
-      run: mkdir -p .github/scripts
-      
+
     - name: 📝 Create Badge Generator Script
       run: |
+        mkdir -p .github/scripts
         cat > .github/scripts/generate-signsprinters-badges.js << 'EOF'
-        const fs = require('fs');
-        const path = require('path');
-        const { execSync } = require('child_process');
+const fs = require('fs');
+const path = require('path');
+const { execSync } = require('child_process');
 
-        // 🚦 SignSprinters-specific achievements
-        const achievements = {
-          'traffic-pioneer': {
-            name: 'Traffic Pioneer',
-            description: 'Started the SignSprinters journey',
-            icon: '🚦',
-            color: '#FF6B35',
-            criteria: 'first-commit'
-          },
-          'python-driver': {
-            name: 'Python Driver',
-            description: 'Added 5+ Python files for ML development',
-            icon: '🐍',
-            color: '#3776AB',
-            criteria: 'python-files-5'
-          },
-          'ml-engineer': {
-            name: 'ML Engineer',
-            description: 'Added machine learning model files',
-            icon: '🤖',
-            color: '#FF4081',
-            criteria: 'ml-files'
-          },
-          'data-scientist': {
-            name: 'Data Scientist',
-            description: 'Added dataset or data processing files',
-            icon: '📊',
-            color: '#2196F3',
-            criteria: 'data-files'
-          },
-          'documentation-master': {
-            name: 'Documentation Master',
-            description: 'Created comprehensive documentation',
-            icon: '📚',
-            color: '#4CAF50',
-            criteria: 'docs-complete'
-          },
-          'ui-designer': {
-            name: 'UI Designer',
-            description: 'Added frontend/UI components',
-            icon: '🎨',
-            color: '#9C27B0',
-            criteria: 'ui-files'
-          },
-          'test-engineer': {
-            name: 'Test Engineer',
-            description: 'Added testing files and test cases',
-            icon: '🧪',
-            color: '#FF9800',
-            criteria: 'test-files'
-          },
-          'config-wizard': {
-            name: 'Config Wizard',
-            description: 'Set up configuration files',
-            icon: '⚙️',
-            color: '#607D8B',
-            criteria: 'config-files'
-          },
-          'commit-champion': {
-            name: 'Commit Champion',
-            description: 'Made 25+ commits to the project',
-            icon: '🏆',
-            color: '#FFD700',
-            criteria: 'commits-25'
-          },
-          'team-collaborator': {
-            name: 'Team Collaborator',
-            description: 'Multiple contributors working together',
-            icon: '👥',
-            color: '#E91E63',
-            criteria: 'multiple-contributors'
-          },
-          'sign-detector': {
-            name: 'Sign Detector',
-            description: 'Implemented sign detection algorithms',
-            icon: '🔍',
-            color: '#00BCD4',
-            criteria: 'detection-code'
-          },
-          'model-trainer': {
-            name: 'Model Trainer',
-            description: 'Added model training scripts',
-            icon: '🏋️',
-            color: '#795548',
-            criteria: 'training-code'
-          }
-        };
+// 🚦 SignSprinters-specific achievements
+const achievements = {
+  'traffic-pioneer': {
+    name: 'Traffic Pioneer',
+    description: 'Started the SignSprinters journey',
+    icon: '🚦',
+    color: '#FF6B35',
+    criteria: 'first-commit'
+  },
+  'python-driver': {
+    name: 'Python Driver',
+    description: 'Added 5+ Python files for ML development',
+    icon: '🐍',
+    color: '#3776AB',
+    criteria: 'python-files-5'
+  },
+  'ml-engineer': {
+    name: 'ML Engineer',
+    description: 'Added machine learning model files',
+    icon: '🤖',
+    color: '#FF4081',
+    criteria: 'ml-files'
+  },
+  'data-scientist': {
+    name: 'Data Scientist',
+    description: 'Added dataset or data processing files',
+    icon: '📊',
+    color: '#2196F3',
+    criteria: 'data-files'
+  },
+  'documentation-master': {
+    name: 'Documentation Master',
+    description: 'Created comprehensive documentation',
+    icon: '📚',
+    color: '#4CAF50',
+    criteria: 'docs-complete'
+  },
+  'ui-designer': {
+    name: 'UI Designer',
+    description: 'Added frontend/UI components',
+    icon: '🎨',
+    color: '#9C27B0',
+    criteria: 'ui-files'
+  },
+  'test-engineer': {
+    name: 'Test Engineer',
+    description: 'Added testing files and test cases',
+    icon: '🧪',
+    color: '#FF9800',
+    criteria: 'test-files'
+  },
+  'config-wizard': {
+    name: 'Config Wizard',
+    description: 'Set up configuration files',
+    icon: '⚙️',
+    color: '#607D8B',
+    criteria: 'config-files'
+  },
+  'commit-champion': {
+    name: 'Commit Champion',
+    description: 'Made 25+ commits to the project',
+    icon: '🏆',
+    color: '#FFD700',
+    criteria: 'commits-25'
+  },
+  'team-collaborator': {
+    name: 'Team Collaborator',
+    description: 'Multiple contributors working together',
+    icon: '👥',
+    color: '#E91E63',
+    criteria: 'multiple-contributors'
+  },
+  'sign-detector': {
+    name: 'Sign Detector',
+    description: 'Implemented sign detection algorithms',
+    icon: '🔍',
+    color: '#00BCD4',
+    criteria: 'detection-code'
+  },
+  'model-trainer': {
+    name: 'Model Trainer',
+    description: 'Added model training scripts',
+    icon: '🏋️',
+    color: '#795548',
+    criteria: 'training-code'
+  }
+};
 
-        // Helper function to count files by pattern
-        function countFiles(dir, patterns) {
-          let count = 0;
-          
-          function traverse(currentDir) {
-            try {
-              if (currentDir.includes('node_modules') || currentDir.includes('.git')) {
-                return;
-              }
-              
-              const files = fs.readdirSync(currentDir);
-              
-              files.forEach(file => {
-                const filePath = path.join(currentDir, file);
-                const stat = fs.statSync(filePath);
-                
-                if (stat.isDirectory()) {
-                  traverse(filePath);
-                } else if (stat.isFile()) {
-                  patterns.forEach(pattern => {
-                    if (typeof pattern === 'string' && file.toLowerCase().includes(pattern.toLowerCase())) {
-                      count++;
-                    } else if (pattern instanceof RegExp && pattern.test(file.toLowerCase())) {
-                      count++;
-                    }
-                  });
-                }
-              });
-            } catch (err) {
-              console.log(`Error reading directory ${currentDir}:`, err.message);
-            }
-          }
-          
-          traverse(dir);
-          return count;
-        }
-
-        // Function to get git statistics
-        function getGitStats() {
-          try {
-            const commitCount = execSync('git rev-list --count HEAD', { encoding: 'utf8' }).trim();
-            const contributors = execSync('git log --format="%an" | sort -u | wc -l', { encoding: 'utf8' }).trim();
-            return {
-              commits: parseInt(commitCount) || 0,
-              contributors: parseInt(contributors) || 0
-            };
-          } catch (err) {
-            console.log('Git stats not available:', err.message);
-            return { commits: 0, contributors: 0 };
-          }
-        }
-
-        // Function to analyze repository structure
-        function analyzeRepository() {
-          const analysis = {
-            pythonFiles: countFiles('.', ['.py']),
-            mlFiles: countFiles('.', ['model', '.pkl', '.h5', '.joblib', 'train', 'neural', 'cnn', 'tensorflow', 'pytorch']),
-            dataFiles: countFiles('.', ['dataset', '.csv', '.json', 'data', '.npy', 'traffic', 'signs']),
-            docFiles: countFiles('.', ['.md', '.rst', '.txt', 'readme', 'doc']),
-            testFiles: countFiles('.', ['test', 'spec', '.test.', '_test']),
-            configFiles: countFiles('.', ['.yml', '.yaml', '.json', '.ini', '.cfg', 'config', 'requirements']),
-            uiFiles: countFiles('.', ['.html', '.css', '.js', '.jsx', '.vue', '.react', 'frontend', 'ui']),
-            detectionFiles: countFiles('.', ['detect', 'recognition', 'classify', 'predict']),
-            trainingFiles: countFiles('.', ['train', 'fit', 'epoch', 'model.py', 'training'])
-          };
-          
-          const gitStats = getGitStats();
-          
-          return { ...analysis, ...gitStats };
-        }
-
-        // Function to check achievements
-        function checkAchievements(stats) {
-          const earned = [];
-          
-          // Always award pioneer badge for having any commits
-          if (stats.commits >= 1) earned.push('traffic-pioneer');
-          
-          // File-based achievements
-          if (stats.pythonFiles >= 5) earned.push('python-driver');
-          if (stats.mlFiles >= 1) earned.push('ml-engineer');
-          if (stats.dataFiles >= 1) earned.push('data-scientist');
-          if (stats.docFiles >= 3) earned.push('documentation-master');
-          if (stats.uiFiles >= 1) earned.push('ui-designer');
-          if (stats.testFiles >= 1) earned.push('test-engineer');
-          if (stats.configFiles >= 1) earned.push('config-wizard');
-          if (stats.detectionFiles >= 1) earned.push('sign-detector');
-          if (stats.trainingFiles >= 1) earned.push('model-trainer');
-          
-          // Activity-based achievements
-          if (stats.commits >= 25) earned.push('commit-champion');
-          if (stats.contributors >= 2) earned.push('team-collaborator');
-          
-          return earned;
-        }
-
-        // Function to generate achievement section for README
-        function generateAchievementSection(earnedAchievements, stats) {
-          let section = '\n## 🏆 SignSprinters Achievement Gallery\n\n';
-          
-          if (earnedAchievements.length === 0) {
-            section += '🚀 *Start coding to unlock your first SignSprinters achievement badge!*\n\n';
-            return section;
-          }
-          
-          // Achievement badges grid
-          section += '<div align="center">\n\n';
-          earnedAchievements.forEach(key => {
-            const achievement = achievements[key];
-            section += `[![${achievement.name}](https://img.shields.io/badge/${encodeURIComponent(achievement.name)}-${encodeURIComponent(achievement.description)}-${achievement.color.replace('#', '')}?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPC9zdmc+)](#achievements)\n`;
-          });
-          section += '\n</div>\n\n';
-          
-          // Achievement details
-          section += '### 🎯 Achievement Details\n\n';
-          section += '| Badge | Achievement | Description |\n';
-          section += '|-------|-------------|-------------|\n';
-          
-          earnedAchievements.forEach(key => {
-            const achievement = achievements[key];
-            section += `| ${achievement.icon} | **${achievement.name}** | ${achievement.description} |\n`;
-          });
-          
-          // Project statistics
-          section += '\n### 📈 Project Statistics\n\n';
-          section += `- 🐍 **Python Files**: ${stats.pythonFiles}\n`;
-          section += `- 🤖 **ML/AI Files**: ${stats.mlFiles}\n`;
-          section += `- 📊 **Data Files**: ${stats.dataFiles}\n`;
-          section += `- 📚 **Documentation**: ${stats.docFiles}\n`;
-          section += `- 🧪 **Test Files**: ${stats.testFiles}\n`;
-          section += `- ⚙️ **Config Files**: ${stats.configFiles}\n`;
-          section += `- 🎨 **UI Files**: ${stats.uiFiles}\n`;
-          section += `- 📝 **Total Commits**: ${stats.commits}\n`;
-          section += `- 👥 **Contributors**: ${stats.contributors}\n\n`;
-          
-          section += '*Last updated: ' + new Date().toISOString().split('T')[0] + '*\n\n';
-          
-          return section;
-        }
-
-        // Main execution
-        async function main() {
-          try {
-            console.log('🚦 SignSprinters Achievement System Starting...');
-            
-            // Analyze repository
-            console.log('📊 Analyzing repository structure...');
-            const stats = analyzeRepository();
-            console.log('Repository stats:', stats);
-            
-            // Check achievements
-            const earnedAchievements = checkAchievements(stats);
-            console.log('🏆 Earned achievements:', earnedAchievements);
-            
-            // Save achievement data
-            const achievementData = {
-              project: 'SignSprinters-Traffic-Sign-Recognition',
-              earned: earnedAchievements,
-              stats: stats,
-              lastUpdated: new Date().toISOString(),
-              totalBadges: earnedAchievements.length,
-              availableBadges: Object.keys(achievements).length
-            };
-            
-            // Ensure .github directory exists
-            const githubDir = '.github';
-            if (!fs.existsSync(githubDir)) {
-              fs.mkdirSync(githubDir, { recursive: true });
-            }
-            
-            fs.writeFileSync(path.join(githubDir, 'achievements.json'), JSON.stringify(achievementData, null, 2));
-            
-            // Update README.md
-            let readmeContent = '';
-            const readmePath = 'README.md';
-            
-            if (fs.existsSync(readmePath)) {
-              readmeContent = fs.readFileSync(readmePath, 'utf8');
-            } else {
-              readmeContent = '# SignSprinters Traffic Sign Recognition Demo\n\nWelcome to our Software Engineering Project!\n';
-            }
-            
-            // Remove existing achievement section
-            readmeContent = readmeContent.replace(/\n## 🏆 SignSprinters Achievement Gallery[\s\S]*?(?=\n## |\n# |$)/g, '');
-            
-            // Add new achievement section
-            const achievementSection = generateAchievementSection(earnedAchievements, stats);
-            readmeContent += achievementSection;
-            
-            fs.writeFileSync(readmePath, readmeContent);
-            
-            console.log(`✅ SignSprinters achievements updated! Earned ${earnedAchievements.length}/${Object.keys(achievements).length} badges`);
-            
-          } catch (error) {
-            console.error('❌ Error in SignSprinters achievement system:', error);
-            process.exit(1);
-          }
-        }
-
-        main();
-        EOF
+// Helper function to count files by pattern
+function countFiles(dir, patterns) {
+  let count = 0;
+  
+  function traverse(currentDir) {
+    try {
+      if (currentDir.includes('node_modules') || currentDir.includes('.git')) {
+        return;
+      }
       
+      const files = fs.readdirSync(currentDir);
+      
+      files.forEach(file => {
+        const filePath = path.join(currentDir, file);
+        const stat = fs.statSync(filePath);
+        
+        if (stat.isDirectory()) {
+          traverse(filePath);
+        } else if (stat.isFile()) {
+          patterns.forEach(pattern => {
+            if (typeof pattern === 'string' && file.toLowerCase().includes(pattern.toLowerCase())) {
+              count++;
+            } else if (pattern instanceof RegExp && pattern.test(file.toLowerCase())) {
+              count++;
+            }
+          });
+        }
+      });
+    } catch (err) {
+      console.log(`Error reading directory ${currentDir}:`, err.message);
+    }
+  }
+  
+  traverse(dir);
+  return count;
+}
+
+// Function to get git statistics
+function getGitStats() {
+  try {
+    const commitCount = execSync('git rev-list --count HEAD', { encoding: 'utf8' }).trim();
+    const contributors = execSync('git log --format="%an" | sort -u | wc -l', { encoding: 'utf8' }).trim();
+    return {
+      commits: parseInt(commitCount) || 0,
+      contributors: parseInt(contributors) || 0
+    };
+  } catch (err) {
+    console.log('Git stats not available:', err.message);
+    return { commits: 0, contributors: 0 };
+  }
+}
+
+// Function to analyze repository structure
+function analyzeRepository() {
+  const analysis = {
+    pythonFiles: countFiles('.', ['.py']),
+    mlFiles: countFiles('.', ['model', '.pkl', '.h5', '.joblib', 'train', 'neural', 'cnn', 'tensorflow', 'pytorch']),
+    dataFiles: countFiles('.', ['dataset', '.csv', '.json', 'data', '.npy', 'traffic', 'signs']),
+    docFiles: countFiles('.', ['.md', '.rst', '.txt', 'readme', 'doc']),
+    testFiles: countFiles('.', ['test', 'spec', '.test.', '_test']),
+    configFiles: countFiles('.', ['.yml', '.yaml', '.json', '.ini', '.cfg', 'config', 'requirements']),
+    uiFiles: countFiles('.', ['.html', '.css', '.js', '.jsx', '.vue', '.react', 'frontend', 'ui']),
+    detectionFiles: countFiles('.', ['detect', 'recognition', 'classify', 'predict']),
+    trainingFiles: countFiles('.', ['train', 'fit', 'epoch', 'model.py', 'training'])
+  };
+  
+  const gitStats = getGitStats();
+  
+  return { ...analysis, ...gitStats };
+}
+
+// Function to check achievements
+function checkAchievements(stats) {
+  const earned = [];
+  
+  if (stats.commits >= 1) earned.push('traffic-pioneer');
+  if (stats.pythonFiles >= 5) earned.push('python-driver');
+  if (stats.mlFiles >= 1) earned.push('ml-engineer');
+  if (stats.dataFiles >= 1) earned.push('data-scientist');
+  if (stats.docFiles >= 3) earned.push('documentation-master');
+  if (stats.uiFiles >= 1) earned.push('ui-designer');
+  if (stats.testFiles >= 1) earned.push('test-engineer');
+  if (stats.configFiles >= 1) earned.push('config-wizard');
+  if (stats.detectionFiles >= 1) earned.push('sign-detector');
+  if (stats.trainingFiles >= 1) earned.push('model-trainer');
+  if (stats.commits >= 25) earned.push('commit-champion');
+  if (stats.contributors >= 2) earned.push('team-collaborator');
+  
+  return earned;
+}
+
+// Function to generate achievement section for README
+function generateAchievementSection(earnedAchievements, stats) {
+  let section = '\n## 🏆 SignSprinters Achievement Gallery\n\n';
+  
+  if (earnedAchievements.length === 0) {
+    section += '🚀 *Start coding to unlock your first SignSprinters achievement badge!*\n\n';
+    return section;
+  }
+  
+  section += '<div align="center">\n\n';
+  earnedAchievements.forEach(key => {
+    const achievement = achievements[key];
+    section += `[![${achievement.name}](https://img.shields.io/badge/${encodeURIComponent(achievement.name)}-${encodeURIComponent(achievement.description)}-${achievement.color.replace('#', '')}?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPC9zdmc+)](#achievements)\n`;
+  });
+  section += '\n</div>\n\n';
+  
+  section += '### 🎯 Achievement Details\n\n';
+  section += '| Badge | Achievement | Description |\n';
+  section += '|-------|-------------|-------------|\n';
+  
+  earnedAchievements.forEach(key => {
+    const achievement = achievements[key];
+    section += `| ${achievement.icon} | **${achievement.name}** | ${achievement.description} |\n`;
+  });
+  
+  section += '\n### 📈 Project Statistics\n\n';
+  section += `- 🐍 **Python Files**: ${stats.pythonFiles}\n`;
+  section += `- 🤖 **ML/AI Files**: ${stats.mlFiles}\n`;
+  section += `- 📊 **Data Files**: ${stats.dataFiles}\n`;
+  section += `- 📚 **Documentation**: ${stats.docFiles}\n`;
+  section += `- 🧪 **Test Files**: ${stats.testFiles}\n`;
+  section += `- ⚙️ **Config Files**: ${stats.configFiles}\n`;
+  section += `- 🎨 **UI Files**: ${stats.uiFiles}\n`;
+  section += `- 📝 **Total Commits**: ${stats.commits}\n`;
+  section += `- 👥 **Contributors**: ${stats.contributors}\n\n`;
+  
+  section += '*Last updated: ' + new Date().toISOString().split('T')[0] + '*\n\n';
+  
+  return section;
+}
+
+// Main execution
+async function main() {
+  try {
+    console.log('🚦 SignSprinters Achievement System Starting...');
+    
+    const stats = analyzeRepository();
+    console.log('Repository stats:', stats);
+    
+    const earnedAchievements = checkAchievements(stats);
+    console.log('🏆 Earned achievements:', earnedAchievements);
+    
+    const achievementData = {
+      project: 'SignSprinters-Traffic-Sign-Recognition',
+      earned: earnedAchievements,
+      stats: stats,
+      lastUpdated: new Date().toISOString(),
+      totalBadges: earnedAchievements.length,
+      availableBadges: Object.keys(achievements).length
+    };
+    
+    if (!fs.existsSync('.github')) fs.mkdirSync('.github', { recursive: true });
+    fs.writeFileSync('.github/achievements.json', JSON.stringify(achievementData, null, 2));
+    
+    let readmeContent = fs.existsSync('README.md') ? fs.readFileSync('README.md', 'utf8') : '# SignSprinters Traffic Sign Recognition Demo\n\nWelcome to our Software Engineering Project!\n';
+    
+    readmeContent = readmeContent.replace(/\n## 🏆 SignSprinters Achievement Gallery[\s\S]*?(?=\n## |\n# |$)/g, '');
+    readmeContent += generateAchievementSection(earnedAchievements, stats);
+    
+    fs.writeFileSync('README.md', readmeContent);
+    
+    console.log(`✅ SignSprinters achievements updated! Earned ${earnedAchievements.length}/${Object.keys(achievements).length} badges`);
+    
+  } catch (error) {
+    console.error('❌ Error in SignSprinters achievement system:', error);
+    process.exit(1);
+  }
+}
+
+main();
+EOF
+
     - name: 🏆 Generate SignSprinters Badges
       run: node .github/scripts/generate-signsprinters-badges.js
-      
-    - name: 📝 Commit Achievement Updates
+
+    - name: 📝 Commit & Push Achievement Updates
       run: |
-        git config --local user.email "signsprinters-bot@github.com"
-        git config --local user.name "SignSprinters Achievement Bot"
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
         git add -A
         if ! git diff --staged --quiet; then
           git commit -m "🏆 Update SignSprinters achievement badges [automated]"
-          git push origin HEAD:${GITHUB_REF#refs/heads/}
+          git push
         else
           echo "No changes to commit"
-        fi
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
