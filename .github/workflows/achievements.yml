@@ -5,6 +5,7 @@ on:
     branches: [ main, master, develop ]
   pull_request:
     branches: [ main, master, develop ]
+    types: [closed]
   workflow_dispatch:
 
 permissions:
@@ -14,8 +15,7 @@ permissions:
 jobs:
   update-achievements:
     runs-on: ubuntu-latest
-    # Only run on push events or merged PRs
-    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true)
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
 
     steps:
     - name: 🚀 Checkout Repository
@@ -34,16 +34,19 @@ jobs:
         echo "Event name: ${{ github.event_name }}"
         echo "Repository: ${{ github.repository }}"
         echo "Branch: ${{ github.ref }}"
-        echo "Working directory:"
-        pwd
+        echo "Actor: ${{ github.actor }}"
+        echo "Working directory: $(pwd)"
+        echo "Files in root:"
         ls -la
         echo "Git status:"
-        git status || echo "Not a git repository or git not available"
+        git status || echo "Git status unavailable"
+        echo "Commit count:"
+        git rev-list --count HEAD || echo "Commit count unavailable"
 
-    - name: 📝 Create Achievement Script
+    - name: 📝 Create Enhanced Achievement Script
       run: |
         mkdir -p .github/scripts
-        cat > .github/scripts/badges.js << 'SCRIPT_EOF'
+        cat > .github/scripts/enhanced-badges.js << 'EOF'
         const fs = require('fs');
         const path = require('path');
         const { execSync } = require('child_process');
@@ -55,45 +58,52 @@ jobs:
           'data-scientist': { name: 'Data Scientist', icon: '📊', color: '2196F3', desc: 'Dataset files' },
           'doc-master': { name: 'Doc Master', icon: '📚', color: '4CAF50', desc: '3+ docs' },
           'test-engineer': { name: 'Test Engineer', icon: '🧪', color: 'FF9800', desc: 'Test files' },
-          'commit-champion': { name: 'Commit Champion', icon: '🏆', color: 'FFD700', desc: '25+ commits' }
+          'commit-champion': { name: 'Commit Champion', icon: '🏆', color: 'FFD700', desc: '25+ commits' },
+          'web-wizard': { name: 'Web Wizard', icon: '🌐', color: '61DAFB', desc: 'HTML/CSS/JS files' },
+          'config-master': { name: 'Config Master', icon: '⚙️', color: '9C27B0', desc: 'Config files' }
         };
 
         function safeExec(command, fallback = '0') {
           try {
             return execSync(command, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim() || fallback;
-          } catch {
+          } catch (error) {
+            console.log(`Command failed: ${command}`);
             return fallback;
           }
         }
 
-        function countFiles(patterns) {
+        function countFiles(extensions) {
           let count = 0;
-          try {
-            const files = execSync('find . -type f -name "*.py" -o -name "*.md" -o -name "*.json" -o -name "*test*" -o -name "*model*" -o -name "*.csv" 2>/dev/null || true', { encoding: 'utf8' });
-            const fileList = files.split('\n').filter(f => f.trim());
-            
-            patterns.forEach(pattern => {
-              count += fileList.filter(file => 
-                file.toLowerCase().includes(pattern.toLowerCase())
-              ).length;
-            });
-          } catch (err) {
-            console.log('File counting error:', err.message);
-          }
+          extensions.forEach(ext => {
+            try {
+              const cmd = ext.startsWith('.') 
+                ? `find . -name "*${ext}" -type f | grep -v node_modules | grep -v .git | wc -l`
+                : `find . -name "*${ext}*" -type f | grep -v node_modules | grep -v .git | wc -l`;
+              
+              const result = execSync(cmd, { encoding: 'utf8' });
+              count += parseInt(result.trim()) || 0;
+            } catch (err) {
+              console.log(`Error counting ${ext}:`, err.message);
+            }
+          });
           return count;
         }
 
         function analyzeRepo() {
+          console.log('🔍 Analyzing repository...');
+          
           const stats = {
-            commits: parseInt(safeExec('git rev-list --count HEAD 2>/dev/null', '0')),
+            commits: parseInt(safeExec('git rev-list --count HEAD', '0')),
             pythonFiles: countFiles(['.py']),
-            mlFiles: countFiles(['model', '.pkl', '.h5', 'train']),
-            dataFiles: countFiles(['data', '.csv', 'dataset']),
-            docFiles: countFiles(['.md', 'readme', 'doc']),
-            testFiles: countFiles(['test'])
+            mlFiles: countFiles(['.pkl', '.h5', '.joblib', 'model', '.onnx', '.pt', '.pth']),
+            dataFiles: countFiles(['.csv', '.json', '.xlsx', '.parquet', 'data', 'dataset']),
+            docFiles: countFiles(['.md', '.rst', '.txt', 'README', 'CHANGELOG', 'LICENSE']),
+            testFiles: countFiles(['test', '_test', '.test', 'spec']),
+            webFiles: countFiles(['.html', '.css', '.js', '.jsx']),
+            configFiles: countFiles(['.yml', '.yaml', '.toml', '.ini', 'Dockerfile', 'requirements'])
           };
           
-          console.log('Repository stats:', stats);
+          console.log('📊 Stats:', JSON.stringify(stats, null, 2));
           return stats;
         }
 
@@ -106,6 +116,8 @@ jobs:
           if (stats.docFiles >= 3) earned.push('doc-master');
           if (stats.testFiles >= 1) earned.push('test-engineer');
           if (stats.commits >= 25) earned.push('commit-champion');
+          if (stats.webFiles >= 3) earned.push('web-wizard');
+          if (stats.configFiles >= 2) earned.push('config-master');
           return earned;
         }
 
@@ -126,28 +138,32 @@ jobs:
           section += '\n</div>\n\n';
           
           section += '### 📊 Stats\n\n';
-          section += `- 🐍 Python Files: ${stats.pythonFiles}\n`;
-          section += `- 🤖 ML Files: ${stats.mlFiles}\n`;
-          section += `- 📊 Data Files: ${stats.dataFiles}\n`;
-          section += `- 📚 Doc Files: ${stats.docFiles}\n`;
-          section += `- 🧪 Test Files: ${stats.testFiles}\n`;
-          section += `- 📝 Commits: ${stats.commits}\n`;
-          section += `\n**Progress: ${earned.length}/${Object.keys(achievements).length} badges**\n\n`;
-          section += `*Updated: ${new Date().toLocaleDateString()}*\n\n`;
+          section += `- 🐍 Python Files: **${stats.pythonFiles}**\n`;
+          section += `- 🤖 ML Files: **${stats.mlFiles}**\n`;
+          section += `- 📊 Data Files: **${stats.dataFiles}**\n`;
+          section += `- 📚 Doc Files: **${stats.docFiles}**\n`;
+          section += `- 🧪 Test Files: **${stats.testFiles}**\n`;
+          section += `- 🌐 Web Files: **${stats.webFiles}**\n`;
+          section += `- ⚙️ Config Files: **${stats.configFiles}**\n`;
+          section += `- 📝 Commits: **${stats.commits}**\n\n`;
+          
+          const progress = Math.round((earned.length / Object.keys(achievements).length) * 100);
+          section += `**Progress: ${earned.length}/${Object.keys(achievements).length} badges (${progress}%)**\n\n`;
+          section += `*Updated: ${new Date().toLocaleString()}*\n\n`;
           
           return section;
         }
 
         function main() {
           try {
-            console.log('🚦 Starting SignSprinters badge system...');
+            console.log('🚦 Starting SignSprinters Badge System...');
             
             const stats = analyzeRepo();
             const earned = checkEarned(stats);
             
             console.log(`🏆 Earned ${earned.length} badges:`, earned);
             
-            // Save achievement data
+            // Save data
             const data = { earned, stats, updated: new Date().toISOString() };
             fs.mkdirSync('.github', { recursive: true });
             fs.writeFileSync('.github/achievements.json', JSON.stringify(data, null, 2));
@@ -157,14 +173,34 @@ jobs:
               fs.readFileSync('README.md', 'utf8') : 
               '# SignSprinters Traffic Sign Recognition\n\nWelcome to our project!\n';
             
-            // Remove existing achievements section
-            readme = readme.replace(/\n## 🏆 SignSprinters Achievements[\s\S]*?(?=\n## |\n# |$)/g, '');
+            // More precise replacement - look for the exact achievements section
+            const achievementRegex = /## 🏆 SignSprinters Achievements[\s\S]*?(?=## [^🏆]|\n---|\n#(?!#)|$)/g;
+            readme = readme.replace(achievementRegex, generateBadgeSection(earned, stats).substring(1)); // Remove leading newline
             
-            // Add new section
-            readme += generateBadgeSection(earned, stats);
+            // If no achievements section exists, add it before Getting Started
+            if (!readme.includes('## 🏆 SignSprinters Achievements')) {
+              const insertPoints = [
+                '## Getting Started',
+                '### Prerequisites',
+                '## Installation',
+                '## Usage'
+              ];
+              
+              let inserted = false;
+              for (const point of insertPoints) {
+                if (readme.includes(point)) {
+                  readme = readme.replace(point, generateBadgeSection(earned, stats) + point);
+                  inserted = true;
+                  break;
+                }
+              }
+              
+              if (!inserted) {
+                readme += generateBadgeSection(earned, stats);
+              }
+            }
             
             fs.writeFileSync('README.md', readme);
-            
             console.log('✅ Badges updated successfully!');
             
           } catch (error) {
@@ -174,16 +210,31 @@ jobs:
         }
 
         main();
-        SCRIPT_EOF
+        EOF
 
     - name: 🏆 Generate Badges
       run: |
-        echo "📍 Current working directory:"
-        pwd
-        echo "📁 Directory contents:"
-        ls -la
-        echo "🚀 Running badge generator..."
-        node .github/scripts/badges.js
+        echo "🚀 Running enhanced badge generator..."
+        node .github/scripts/enhanced-badges.js
+
+    - name: 🔍 Verify Generated Files
+      run: |
+        echo "📁 Checking generated files:"
+        if [ -f ".github/achievements.json" ]; then
+          echo "✅ achievements.json created"
+          echo "📄 Content preview:"
+          head -20 .github/achievements.json
+        else
+          echo "❌ achievements.json not found"
+        fi
+        
+        echo ""
+        echo "📖 README.md achievements section:"
+        if grep -A 10 "## 🏆 SignSprinters Achievements" README.md; then
+          echo "✅ Achievements section found in README"
+        else
+          echo "⚠️ Achievements section not found in README"
+        fi
 
     - name: 🔍 Check Changes
       id: changes
@@ -196,24 +247,39 @@ jobs:
           echo "has_changes=true" >> $GITHUB_OUTPUT
           echo "📝 Changes detected:"
           git diff --staged --name-only
+          echo "📋 Diff summary:"
+          git diff --staged --stat
         fi
 
     - name: 📝 Commit Changes
       if: steps.changes.outputs.has_changes == 'true'
       run: |
-        git config --local user.name "GitHub Actions Bot"
-        git config --local user.email "actions@github.com"
-        git commit -m "🏆 Update SignSprinters badges [automated]"
+        git config --local user.name "🚦 SignSprinters Bot"
+        git config --local user.email "bot@signsprinters.dev"
+        git commit -m "🏆 Update SignSprinters achievements [automated]
+
+        📊 Achievements updated automatically
+        🤖 Generated by GitHub Actions
+        ⏰ $(date)"
         git push
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: 📊 Final Report
       run: |
-        echo "🎉 Workflow completed!"
+        echo "🎉 SignSprinters Achievement Update Complete!"
+        echo ""
         if [ -f ".github/achievements.json" ]; then
-          echo "📄 Achievement data created successfully"
-          cat .github/achievements.json
+          echo "📈 Achievement Summary:"
+          node -e "
+            const data = JSON.parse(require('fs').readFileSync('.github/achievements.json', 'utf8'));
+            console.log(\`   🏆 Badges Earned: \${data.earned.length}\`);
+            console.log(\`   📊 Total Commits: \${data.stats.commits}\`);
+            console.log(\`   🐍 Python Files: \${data.stats.pythonFiles}\`);
+            console.log(\`   📚 Doc Files: \${data.stats.docFiles}\`);
+            console.log(\`   🧪 Test Files: \${data.stats.testFiles}\`);
+            console.log(\`   ⏰ Last Updated: \${new Date(data.updated).toLocaleString()}\`);
+          "
         else
-          echo "⚠️ Achievement data not found"
+          echo "⚠️ Achievement data not available"
         fi
